@@ -2,18 +2,17 @@ import pygame
 from Load_image import load_image
 
 
-class Truba(pygame.sprite.Sprite):
+class Angle(pygame.sprite.Sprite):
     def __init__(self, sprite, type):
         super().__init__(sprite)
-        self.image = load_image('заполнение 0.png')
+        self.image = load_image('угол.png')
         self.rect = self.image.get_rect()
-        self.image = pygame.transform.rotate(self.image, 90)
         self.rect.x = -100
         self.rect.y = -100
         self.type = type
-        self.position = ['-', '|']
-        self.position_in_masiv = 0
         self.status_move = True
+        self.position = ['>|', '-|', '|-', '|>']
+        self.position_in_masiv = 0
 
     def move(self, sp):
         self.rect.x = sp[0] * 32
@@ -31,6 +30,9 @@ class Truba(pygame.sprite.Sprite):
         self.status_move = False
         self.add(self.type)
 
+    def get_position(self):
+        return self.position[self.position_in_masiv]
+
     def proverka(self, sp):
         q = 0
         for i in sp:
@@ -40,9 +42,6 @@ class Truba(pygame.sprite.Sprite):
             return True
         else:
             return False
-
-    def get_position(self):
-        return self.position[self.position_in_masiv]
 
     def update(self, naprovlenie):
         ...

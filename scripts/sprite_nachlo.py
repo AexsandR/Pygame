@@ -29,3 +29,8 @@ class Nachalo(pygame.sprite.Sprite):
     def update(self):
         self.cur_frame = (self.cur_frame + 1) % len(self.frame)
         self.image = self.frame[self.cur_frame]
+
+
+
+
+
