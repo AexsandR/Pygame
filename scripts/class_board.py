@@ -8,7 +8,7 @@ class Board:
         self.height = height
         self.board = [[0] * width for _ in range(height)]
         self.board[0][0] = '-'
-        self.board[0][19] = 'end'
+        self.board[0][width - 1] = 'end'
         # значения по умолчанию
         self.x = 0
         self.y = 0
@@ -68,8 +68,10 @@ class Board:
                 if isinstance(self.board[y][x], int):
                     break
                 if position == '-' and self.board[y][x] == position:
+                    spisok.append([x, y, napravlenie])
                     x += napr_x
                 elif position == '|' and self.board[y][x] == position:
+                    spisok.append([x, y, napravlenie])
                     y += napr_y
                 elif self.board[y][x] == 'end':
                     res = True
@@ -77,20 +79,24 @@ class Board:
                 elif position == '-' and self.board[y][x] == '>|' and napravlenie == 'right':
                     if y == 13:
                         break
+                    spisok.append([x, y, napravlenie, 'down'])
+                    napravlenie = 'down'
                     napr_y = 1
                     y += napr_y
-                    napravlenie = 'down'
                     position = '|'
                 elif position == '|' and self.board[y][x] == '>|' and napravlenie == 'up':
                     if x == 0:
                         break
                     napr_x = -1
+                    spisok.append([x, y, napravlenie,'left'])
                     x += napr_x
                     napravlenie = 'left'
                     position = '-'
+
                 elif position == '-' and self.board[y][x] == '|>' and napravlenie == 'right':
                     if y == 0:
                         break
+                    spisok.append([x, y, napravlenie, 'up'])
                     napr_y = -1
                     y += napr_y
                     napravlenie = 'up'
@@ -98,6 +104,7 @@ class Board:
                 elif position == '|' and self.board[y][x] == '|>' and napravlenie == 'down':
                     if x == 0:
                         break
+                    spisok.append([x, y, napravlenie, 'left'])
                     napr_x = -1
                     x += napr_x
                     napravlenie = 'left'
@@ -105,6 +112,7 @@ class Board:
                 elif position == '|' and self.board[y][x] == '|-' and napravlenie == 'down':
                     if x == 19:
                         break
+                    spisok.append([x, y,napravlenie,'right'])
                     position = '-'
                     napravlenie = 'right'
                     napr_x = 1
@@ -112,6 +120,7 @@ class Board:
                 elif position == '-' and self.board[y][x] == '|-' and napravlenie == 'left':
                     if y == 0:
                         break
+                    spisok.append([x, y, napravlenie,'up'])
                     position = '|'
                     napravlenie = 'up'
                     napr_y = -1
@@ -119,6 +128,7 @@ class Board:
                 elif  position == '|' and self.board[y][x] == '-|' and napravlenie == 'up':
                     if x == 19:
                         break
+                    spisok.append([x, y, napravlenie,'right'])
                     napravlenie = 'right'
                     napr_x = 1
                     x += napr_x
@@ -126,6 +136,7 @@ class Board:
                 elif  position == '-' and self.board[y][x] == '-|' and napravlenie == 'left':
                     if x == 19:
                         break
+                    spisok.append([x, y, napravlenie,'down'])
                     napravlenie = 'down'
                     napr_y = 1
                     y += napr_y
@@ -136,5 +147,9 @@ class Board:
             except Exception as err:
                 print(err)
                 break
+        print()
+        print(spisok)
         if res is True:
-            return True
+            return spisok
+        else:
+            return False

@@ -1,12 +1,10 @@
-import pygame
 from Start_window import start_screen
 from class_board import Board
 from sprite_nachlo import Nachalo
 from sprite_end import End
 from sprite_truba import *
-import sys
 from sprite_angle import Angle
-
+import sys
 
 def zapolnenie():
     for i in range(9):
@@ -17,8 +15,22 @@ def zapolnenie():
         truba.draw(screen)
         angle.draw(screen)
         pygame.display.flip()
-        clock.tick(2)
-    print(board.proverka())
+        clock.tick(8)
+    res = board.proverka()
+    if res:
+        for cord in res:
+            for i in range(9):
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        sys.exit()
+                truba.update(cord)
+                angle.update(cord)
+                truba.draw(screen)
+                angle.draw(screen)
+                pygame.display.flip()
+                clock.tick(60)
+
+
 
 
 if __name__ == '__main__':
@@ -52,7 +64,7 @@ if __name__ == '__main__':
                         status = False
                         pos = board.get_cell(event.pos)
                         board.take_a_position([pos[0], pos[1], object.get_position()])
-                        object.stop()
+                        object.stop(pos[0],pos[1])
 
                 if event.type == pygame.KEYUP and event.key == pygame.K_o and status:
                     object.rotate(1)
@@ -63,7 +75,6 @@ if __name__ == '__main__':
                     if board.get_cell(event.pos):
                         pos = board.get_cell(event.pos)
                         object.move(pos)
-                        print(pos)
                 if event.type == pygame.KEYUP and event.key == pygame.K_1 and status is False:
                     status = True
                     print(12)
