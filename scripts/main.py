@@ -44,11 +44,12 @@ def proverka_sp(pos, type_sprite):
             object.stop(pos[0], pos[1])
             list_action.append([pos[0], pos[1]])
             all_sprites.remove(object)
+            type_sprite.add(object)
         else:
             object.stop(pos[0], pos[1])
             list_action.append([pos[0], pos[1]])
             all_sprites.remove(object)
-            truba.add(object)
+            type_sprite.add(object)
             print(all_sprites)
             print(truba)
 
@@ -200,7 +201,7 @@ if __name__ == '__main__':
                                 else:
                                     if status is False:
                                         object = i[1](all_sprites)
-                                        type_sprite = i[-1]
+                                        type_sprite = i[2]
                                         status_combo = False
                                         status = True
                                         status_dell = False
@@ -224,5 +225,6 @@ if __name__ == '__main__':
             nachalo.draw(screen)
             end.draw(screen)
             all_sprites.draw(screen)
+            angle.draw(screen)
             truba.draw(screen)
             pygame.display.flip()
