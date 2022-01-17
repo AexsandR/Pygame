@@ -15,6 +15,14 @@ class Nachalo(pygame.sprite.Sprite):
         self.cur_frame = 0
         self.image = self.frame[self.cur_frame]
 
+    def rotate(self, q):
+        if q == 1:
+            self.image = pygame.transform.rotate(self.image, 90)
+            self.position_in_masiv = (1 + self.position_in_masiv) % len(self.position)
+        else:
+            self.image = pygame.transform.rotate(self.image, -90)
+            self.position_in_masiv = (-1 + self.position_in_masiv) % len(self.position)
+
     def cut_sheet(self):
         for i in range(9):
             if i == 8:

@@ -38,6 +38,14 @@ class Board:
             x = self.x
             y += self.cell_size
 
+    def new_pole(self):
+        self.board = [[0] * self.width for _ in range(self.height)]
+        self.board[0][0] = '-'
+        self.board[0][self.width - 1] = 'end'
+        # значения по умолчанию
+        self.x = 0
+        self.y = 0
+
     def get_cell(self, Pos):
         x = self.x
         y = self.y
@@ -88,7 +96,7 @@ class Board:
                     if x == 0:
                         break
                     napr_x = -1
-                    spisok.append([x, y, napravlenie,'left'])
+                    spisok.append([x, y, napravlenie, 'left'])
                     x += napr_x
                     napravlenie = 'left'
                     position = '-'
@@ -112,7 +120,7 @@ class Board:
                 elif position == '|' and self.board[y][x] == '|-' and napravlenie == 'down':
                     if x == 19:
                         break
-                    spisok.append([x, y,napravlenie,'right'])
+                    spisok.append([x, y, napravlenie, 'right'])
                     position = '-'
                     napravlenie = 'right'
                     napr_x = 1
@@ -120,23 +128,23 @@ class Board:
                 elif position == '-' and self.board[y][x] == '|-' and napravlenie == 'left':
                     if y == 0:
                         break
-                    spisok.append([x, y, napravlenie,'up'])
+                    spisok.append([x, y, napravlenie, 'up'])
                     position = '|'
                     napravlenie = 'up'
                     napr_y = -1
                     y += napr_y
-                elif  position == '|' and self.board[y][x] == '-|' and napravlenie == 'up':
+                elif position == '|' and self.board[y][x] == '-|' and napravlenie == 'up':
                     if x == 19:
                         break
-                    spisok.append([x, y, napravlenie,'right'])
+                    spisok.append([x, y, napravlenie, 'right'])
                     napravlenie = 'right'
                     napr_x = 1
                     x += napr_x
                     position = '-'
-                elif  position == '-' and self.board[y][x] == '-|' and napravlenie == 'left':
+                elif position == '-' and self.board[y][x] == '-|' and napravlenie == 'left':
                     if x == 19:
                         break
-                    spisok.append([x, y, napravlenie,'down'])
+                    spisok.append([x, y, napravlenie, 'down'])
                     napravlenie = 'down'
                     napr_y = 1
                     y += napr_y
