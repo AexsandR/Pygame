@@ -3,7 +3,7 @@ from Load_image import load_image
 
 
 class Angle(pygame.sprite.Sprite):
-    def __init__(self, sprite):
+    def __init__(self, sprite, pos_in_mas=False):
         super().__init__(sprite)
         self.image = load_image('угол 0.png')
         self.rect = self.image.get_rect()
@@ -16,6 +16,15 @@ class Angle(pygame.sprite.Sprite):
         self.frame = []
         self.cut_sheet()
         self.image = self.frame[self.cur_frame]
+
+        if pos_in_mas:
+            for i in range(len(self.position)):
+                if pos_in_mas == self.position[i]:
+                    self.position_in_masiv = i
+                    self.image = pygame.transform.rotate(self.image, 90 * i)
+                    print(12312354675467)
+                    print(i)
+                    break
 
     def cut_sheet(self):
         for i in range(10):

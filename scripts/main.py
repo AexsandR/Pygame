@@ -88,7 +88,7 @@ if __name__ == '__main__':
     all_sprites = pygame.sprite.Group()
     status_combo = False
     SPISOK_BUTTON = [[[641, 1, 318, 159], 'Действие назад', None], [[960, 1, 319, 159], 'Сохранить'],
-                     [[641, 161, 319, 159], 'Очистить поле',None], [[960, 161, 319, 159], 'Удалить обьект', None],
+                     [[641, 161, 319, 159], 'Очистить поле', None], [[960, 161, 319, 159], 'Удалить обьект', None],
                      [[640, 321, 640, 93], 'Заполнение', zapolnenie], [[640, 411, 190, 36], 'Вентилятор'],
                      [[831, 411, 113, 36], Truba, truba, None],
                      [[944, 411, 176, 36], 'смеситель'], [[1121, 411, 159, 36], Angle, angle, None]]
@@ -124,16 +124,39 @@ if __name__ == '__main__':
                         if pos:
                             pos = list(pos)
                             if pos in list_action:
-                                angle.update(pos,dell=True)
+                                len_truba = len(truba)
+                                len_angle = len(angle)
                                 truba.update(pos, dell=True)
-                                list_action.remove(pos)
+                                angle.update(pos, dell=True)
+                                res = list_action.index(pos)
+                                print(res)
+                                list_action[res] = None
+                                if len_truba - 1 == len(truba):
+                                    pos.append(Truba)
+                                    pos.append(truba)
+                                    pos.append(board.to_give_position([pos[0], pos[1]]))
+                                elif len_angle - 1 == len(angle):
+                                    pos.append(Angle)
+                                    pos.append(angle)
+                                    pos.append(board.to_give_position([pos[0], pos[1]]))
+                                print()
+                                print(pos)
+                                pos.append(res)
+                                list_action.append(pos)
+                                print(list_action)
                                 board.take_a_position([pos[0], pos[1], 0])
                             else:
                                 for i in spisok_number_combo_in_list_action:
                                     if pos in list_action[i]:
-                                        angle.update(pos, dell=True)
                                         truba.update(pos, dell=True)
-                                        list_action[i].remove(pos)
+                                        res = list_action[i].index(pos)
+                                        list_action[i][res] = None
+                                        pos.append(Truba)
+                                        pos.append(truba)
+                                        pos.append(board.to_give_position([pos[0], pos[1]]))
+                                        pos.append(i)
+                                        pos.append(res)
+                                        list_action.append(pos)
                                         board.take_a_position([pos[0], pos[1], 0])
                                         break
 
@@ -144,6 +167,7 @@ if __name__ == '__main__':
                             if pos[0] == x_combo and pos[1] != y_combo:
                                 razniza = max([y_combo, pos[1]]) - min([y_combo, pos[1]])
                                 status_combo = False
+                                sp = []
                                 for i in range(razniza + 1):
                                     object = Truba(all_sprites)
                                     object.move([x_combo, min([y_combo, pos[1]]) + i])
@@ -180,14 +204,34 @@ if __name__ == '__main__':
                                         i[2]()
                                     elif i[1] == 'Действие назад':
                                         if len(list_action) != 0:
+                                            print(list_action)
                                             elem = list_action.pop()
-                                            if type(elem) == list:
-                                                for i in elem:
-                                                    truba.update(i, dell=True)
-                                                    board.take_a_position([i[0], i[1], 0])
-                                            else:
-                                                truba.update(elem, dell=True)
-                                                board.take_a_position([elem[0], elem[1], 0])
+                                            if elem:
+                                                if len(elem) > 2 and type(elem[-2]) == str:
+                                                    print(1231234234345456567678678)
+                                                    object = elem[2](all_sprites, elem[-2])
+                                                    object.move([elem[0], elem[1]])
+                                                    object.stop(elem[0], elem[1])
+                                                    list_action[elem[-1]] = [elem[0], elem[1]]
+                                                    all_sprites.remove(object)
+                                                    elem[3].add(object)
+                                                elif len(elem) > 2 and type(elem[-3]) == str:
+                                                    object = elem[2](all_sprites, elem[-3])
+                                                    object.move([elem[0], elem[1]])
+                                                    object.stop(elem[0], elem[1])
+                                                    list_action[elem[-2]][elem[-1]] = [elem[0], elem[1]]
+                                                    all_sprites.remove(object)
+                                                    elem[3].add(object)
+                                                elif len(elem) > 2:
+                                                    print()
+                                                    print(elem)
+                                                    for i in elem:
+                                                        truba.update(i, dell=True)
+                                                        board.take_a_position([i[0], i[1], 0])
+                                                else:
+                                                    truba.update(elem, dell=True)
+                                                    angle.update(elem, dell=True)
+                                                    board.take_a_position([elem[0], elem[1], 0])
                                     elif i[1] == 'Удалить обьект':
                                         status_dell = True
                                     elif i[1] == 'Очистить поле':
@@ -206,11 +250,13 @@ if __name__ == '__main__':
                                         status = True
                                         status_dell = False
 
-                if event.type == pygame.MOUSEBUTTONUP and event.button == 3 and status_combo is False and status is False:
+                if event.type == pygame.MOUSEBUTTONUP and event.button == 3 and status_combo is False and status\
+                        is False:
                     pos = board.get_cell(event.pos)
-                    x_combo = pos[0]
-                    y_combo = pos[1]
-                    status_combo = True
+                    if pos:
+                        x_combo = pos[0]
+                        y_combo = pos[1]
+                        status_combo = True
                 if event.type == pygame.KEYUP and event.key == pygame.K_o and status and status_combo is False:
                     object.rotate(1)
                 elif event.type == pygame.KEYUP and event.key == pygame.K_p and status and status_combo is False:

@@ -19,8 +19,11 @@ class Board:
         y = pos[1]
         position = pos[2]
         self.board[y][x] = position
-        for i in self.board:
-            print(i)
+
+    def to_give_position(self,pos):
+        x = pos[0]
+        y = pos[1]
+        return self.board[y][x]
 
     # настройка внешнего вида
     def set_view(self, x, y, cell_size):

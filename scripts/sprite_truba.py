@@ -3,7 +3,7 @@ from Load_image import load_image
 
 
 class Truba(pygame.sprite.Sprite):
-    def __init__(self, sprite):
+    def __init__(self, sprite, pos_in_mas=False):
         super().__init__(sprite)
         self.image = load_image('заполнение 0.png')
         self.rect = self.image.get_rect()
@@ -20,6 +20,11 @@ class Truba(pygame.sprite.Sprite):
         self.x = None
         self.y = None
         self.stutus_naprovlenie = False
+        if pos_in_mas:
+            for i in range(len(self.position)):
+                if pos_in_mas == self.position[i]:
+                    self.position_in_masiv = i
+                    break
 
     def cut_sheet(self, angle):
         for i in range(10):
@@ -74,7 +79,9 @@ class Truba(pygame.sprite.Sprite):
     def get_position(self):
         return self.position[self.position_in_masiv]
 
+
     def update(self, spisok=[-1, -1], dell=False, clear=False):
+        print(spisok)
         if clear:
             self.kill()
         if spisok[0] == self.x and self.y == spisok[1]:
