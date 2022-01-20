@@ -5,21 +5,29 @@ from sprite_end import End
 from sprite_truba import *
 from sprite_angle import Angle
 import sys
+from Posledovatelnoe_connect import posledovatelnoe_connect_om
+from sprite_smesitel import Smesitel
 
 
-def zapolnenie():
-    for i in range(8):
-        board.render(screen)
-        nachalo.update()
-        end.draw(screen)
-        nachalo.draw(screen)
-        truba.draw(screen)
-        angle.draw(screen)
-        pygame.display.flip()
-        clock.tick(8)
+def zapolnenie(fps_volt):
     res = board.proverka()
     if res:
+        for i in range(8):
+            board.render(screen)
+            nachalo.update()
+            end.draw(screen)
+            nachalo.draw(screen)
+            truba.draw(screen)
+            angle.draw(screen)
+            smesitel.draw(screen)
+            pygame.display.flip()
+            clock.tick(8)
+        fps_amper = posledovatelnoe_connect_om(res, slovar_smesitel, fps_volt)
+        print(fps_amper)
         for cord in res:
+            tmp = (cord[0], cord[1])
+            if tmp in slovar_smesitel:
+                fps_volt = fps_amper * slovar_smesitel[tmp]
             for i in range(9):
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -28,8 +36,9 @@ def zapolnenie():
                 angle.update(cord)
                 truba.draw(screen)
                 angle.draw(screen)
+                smesitel.draw(screen)
                 pygame.display.flip()
-                clock.tick(60)
+                clock.tick(fps_amper)
 
 
 def proverka_sp(pos, type_sprite):
@@ -50,6 +59,8 @@ def proverka_sp(pos, type_sprite):
             list_action.append([pos[0], pos[1]])
             all_sprites.remove(object)
             type_sprite.add(object)
+            if type_sprite == smesitel:
+                slovar_smesitel[(pos[0], pos[1])] = 0
             print(all_sprites)
             print(truba)
 
@@ -90,21 +101,23 @@ if __name__ == '__main__':
     SPISOK_BUTTON = [[[641, 1, 318, 159], 'Действие назад', None], [[960, 1, 319, 159], 'Сохранить'],
                      [[641, 161, 319, 159], 'Очистить поле', None], [[960, 161, 319, 159], 'Удалить обьект', None],
                      [[640, 321, 640, 93], 'Заполнение', zapolnenie], [[640, 411, 190, 36], 'Вентилятор'],
-                     [[831, 411, 113, 36], Truba, truba, None],
-                     [[944, 411, 176, 36], 'смеситель'], [[1121, 411, 159, 36], Angle, angle, None]]
+                     [[831, 418, 113, 40], Truba, truba, None],
+                     [[944, 418, 176, 40], Smesitel, smesitel, None], [[1121, 418, 159, 40], Angle, angle, None]]
 
     Nachalo(nachalo)
-    End(end, 20, 1)
+    End(end, 1, 8)
     fps_volt = 60
     fps_amper = fps_volt
     x_combo = None
     y_combo = None
     status_dell = False
+    fps_volt = 60
     x = 0
     y = 0
     all_sprites = pygame.sprite.Group()
     spisok_number_combo_in_list_action = []
     list_action = []
+    slovar_smesitel = {}
     if start_screen(screen):
         running = True
         status = False
@@ -115,6 +128,13 @@ if __name__ == '__main__':
                 if event.type == pygame.QUIT:
                     running = False
                 if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                    pos = board.get_cell(event.pos)
+                    if pos:
+                        print('ok')
+                        print(slovar_smesitel)
+                        if (pos[0], pos[1]) in slovar_smesitel:
+                            slovar_smesitel[(pos[0], pos[1])] = (slovar_smesitel[(pos[0], pos[1])] + 1) % 5
+                            smesitel.update(pos)
                     if status:
                         pos = board.get_cell(event.pos)
                         if pos:
@@ -201,8 +221,10 @@ if __name__ == '__main__':
                                     i[0][3]:
                                 if len(i) == 3:
                                     if i[1] == 'Заполнение':
-                                        i[2]()
+                                        print(0)
+                                        i[2](fps_volt)
                                     elif i[1] == 'Действие назад':
+                                        print(1)
                                         if len(list_action) != 0:
                                             print(list_action)
                                             elem = list_action.pop()
@@ -234,7 +256,9 @@ if __name__ == '__main__':
                                                     board.take_a_position([elem[0], elem[1], 0])
                                     elif i[1] == 'Удалить обьект':
                                         status_dell = True
+                                        print(2)
                                     elif i[1] == 'Очистить поле':
+                                        print(3)
                                         truba.update(clear=True)
                                         angle.update(clear=True)
                                         board.new_pole()
@@ -244,13 +268,14 @@ if __name__ == '__main__':
 
                                 else:
                                     if status is False:
+                                        print(1231324)
                                         object = i[1](all_sprites)
                                         type_sprite = i[2]
                                         status_combo = False
                                         status = True
                                         status_dell = False
 
-                if event.type == pygame.MOUSEBUTTONUP and event.button == 3 and status_combo is False and status\
+                if event.type == pygame.MOUSEBUTTONUP and event.button == 3 and status_combo is False and status \
                         is False:
                     pos = board.get_cell(event.pos)
                     if pos:
@@ -263,6 +288,7 @@ if __name__ == '__main__':
                     object.rotate(-1)
 
                 if event.type == pygame.MOUSEMOTION and status:
+                    print(event.pos)
                     if board.get_cell(event.pos):
                         pos = board.get_cell(event.pos)
                         object.move(pos)
@@ -273,4 +299,5 @@ if __name__ == '__main__':
             all_sprites.draw(screen)
             angle.draw(screen)
             truba.draw(screen)
+            smesitel.draw(screen)
             pygame.display.flip()

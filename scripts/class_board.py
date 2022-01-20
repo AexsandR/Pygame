@@ -7,8 +7,8 @@ class Board:
         self.width = width
         self.height = height
         self.board = [[0] * width for _ in range(height)]
-        self.board[0][0] = '-'
-        self.board[0][width - 1] = 'end'
+        self.board[6][0] = '-'
+        self.board[7][0] = 'end'
         # значения по умолчанию
         self.x = 0
         self.y = 0
@@ -24,6 +24,12 @@ class Board:
         x = pos[0]
         y = pos[1]
         return self.board[y][x]
+
+    def save(self, spisok_sprite):
+        ...
+
+    def load(self):
+        ...
 
     # настройка внешнего вида
     def set_view(self, x, y, cell_size):
@@ -43,8 +49,8 @@ class Board:
 
     def new_pole(self):
         self.board = [[0] * self.width for _ in range(self.height)]
-        self.board[0][0] = '-'
-        self.board[0][self.width - 1] = 'end'
+        self.board[6][0] = '-'
+        self.board[7][0] = 'end'
         # значения по умолчанию
         self.x = 0
         self.y = 0
@@ -63,17 +69,20 @@ class Board:
 
     def get_click(self, mouse_pos):
         cell = self.get_cell(mouse_pos)
-        print(cell)
+        for i  in self.board:
+            print(i)
 
     def proverka(self):
         x = 0
-        y = 0
+        y = 6
         res = False
         spisok = []
         napr_x = 1
         napr_y = 0
         napravlenie = 'right'
         position = '-'
+        for i in self.board:
+            print(i)
         while True:
             try:
                 if isinstance(self.board[y][x], int):

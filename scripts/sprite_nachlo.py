@@ -6,14 +6,16 @@ class Nachalo(pygame.sprite.Sprite):
     def __init__(self, type):
         super().__init__(type)
         self.image = load_image('начало 0.png')
-        self.rect = self.image.get_rect()
         self.image = pygame.transform.rotate(self.image, 90)
-        self.rect.x = 0
-        self.rect.y = 0
+
+
         self.frame = []
         self.cut_sheet()
         self.cur_frame = 0
         self.image = self.frame[self.cur_frame]
+        self.rect = self.image.get_rect()
+        self.rect.x = 0
+        self.rect.y = 192
 
     def rotate(self, q):
         if q == 1:
