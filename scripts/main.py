@@ -20,14 +20,17 @@ def element(cord, fps):
     while stop:
         ventilator.update(cord)
         ventilator.draw(screen)
-        clock.tick(fps)
+
         pygame.display.flip()
+        clock.tick(fps)
+
     return True
 
 
-def zapolnenie(fps_volt):
-    print(fps_volt)
+def zapolnenie(fps):
+    print(fps)
     global stop
+    global fps_volt
     res = board.proverka()
     if res:
         stop = True
@@ -50,9 +53,9 @@ def zapolnenie(fps_volt):
         for cord in res:
             tmp = (cord[0], cord[1])
             if tmp in slovar_smesitel:
-                print(fps_amper * slovar_smesitel[tmp][0])
+                fps_volt = fps_amper * slovar_smesitel[tmp][0]
             if tmp in spisok_activ_elem:
-                r = threading.Thread(target=element, args=(cord, fps_amper * slovar_smesitel[tmp][0]))
+                r = threading.Thread(target=element, args=(cord,fps_volt))
                 r.start()
             for i in range(9):
                 for event in pygame.event.get():
@@ -82,7 +85,7 @@ def proverka_sp(pos, type_sprite):
     global status
     global shag
     global setting_shag
-    if object.proverka([truba, nachalo, end, smesitel, angle]):
+    if object.proverka([truba, nachalo, end, smesitel, angle, ventilator]):
         status = False
         try:
             board.take_a_position([pos[0], pos[1], object.get_position()])
@@ -203,15 +206,25 @@ if __name__ == '__main__':
                                 len_truba = len(truba)
                                 len_angle = len(angle)
                                 len_smesitel = len(smesitel)
+                                len_ventilator = len(ventilator)
                                 truba.update(pos, dell=True)
+                                ventilator.update(pos, dell=True)
                                 angle.update(pos, dell=True)
                                 smesitel.update(pos, dell=True)
+
                                 res = list_action.index(pos)
                                 print(res)
                                 list_action[res] = None
                                 if len_truba - 1 == len(truba):
                                     pos.append(Truba)
                                     pos.append(truba)
+                                    pos.append(board.to_give_position([pos[0], pos[1]]))
+                                elif len_ventilator - 1 == len(ventilator):
+                                    print(123134)
+                                    pos.append(Ventilator)
+                                    pos.append(ventilator)
+                                    spisok_activ_elem.remove((pos[0],pos[1]))
+                                    print(spisok_activ_elem)
                                     pos.append(board.to_give_position([pos[0], pos[1]]))
                                 elif len_angle - 1 == len(angle):
                                     pos.append(Angle)
@@ -220,6 +233,7 @@ if __name__ == '__main__':
                                 elif len_smesitel - 1 == len(smesitel):
                                     pos.append(Smesitel)
                                     pos.append(smesitel)
+                                    slovar_smesitel[(pos[0], pos[1])][0] = 0
                                     pos.append(slovar_smesitel[(pos[0], pos[1])])
                                     pos.append(board.to_give_position([pos[0], pos[1]]))
                                 print()
@@ -285,6 +299,7 @@ if __name__ == '__main__':
                                 if len(i) == 3:
                                     if i[1] == 'Заполнение' and stop is False:
                                         print(fps_volt)
+                                        fps_volt = 120
                                         i[2](fps_volt)
                                     elif i[
                                         1] == 'повернуть против часовой стрелке' and status and status_combo is False and stop is False:
@@ -296,6 +311,7 @@ if __name__ == '__main__':
                                         stop = False
                                         angle.update(faza_null=True)
                                         truba.update(faza_null=True)
+                                        stop = False
                                     elif i[1] == 'Действие назад' and stop is False:
                                         status_dell = False
                                         print(1)
@@ -311,14 +327,18 @@ if __name__ == '__main__':
                                                     list_action[elem[-1]] = [elem[0], elem[1]]
                                                     all_sprites.remove(object)
                                                     elem[3].add(object)
+                                                    if elem[3] == ventilator:
+                                                        spisok_activ_elem.append((elem[0], elem[1]))
                                                     board.take_a_position([elem[0], elem[1], object.get_position()])
                                                 elif len(elem) > 2 and type(elem[-3]) == str:
+
                                                     object = elem[2](all_sprites, elem[-3])
                                                     object.move([elem[0], elem[1]])
                                                     object.stop(elem[0], elem[1])
                                                     list_action[elem[-2]][elem[-1]] = [elem[0], elem[1]]
                                                     all_sprites.remove(object)
                                                     elem[3].add(object)
+
                                                     board.take_a_position([elem[0], elem[1], object.get_position()])
                                                 elif len(elem) == 7 and type(elem[-2]) == str:
                                                     print(123144234)
@@ -343,6 +363,7 @@ if __name__ == '__main__':
                                         ventilator.update(clear=True)
                                         board.new_pole()
                                         list_action = []
+                                        spisok_activ_elem = []
                                         spisok_number_combo_in_list_action = []
                                 else:
                                     if status is False and stop is False:
@@ -371,7 +392,7 @@ if __name__ == '__main__':
             key_pressed = pygame.key.get_pressed()
             if key_pressed[pygame.K_UP] and shag != 100 and setting_shag:
                 shag += 1
-            if key_pressed[pygame.K_DOWN] and shag != 0 and setting_shag:
+            if key_pressed[pygame.K_DOWN] and shag != 1 and setting_shag:
                 shag -= 1
             if setting_shag:
                 font = pygame.font.Font(None, 100)
