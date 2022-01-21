@@ -62,10 +62,15 @@ class Angle(pygame.sprite.Sprite):
         else:
             return False
 
-    def update(self, spisok=[-1, -1], dell=False, clear=False):
-        if clear:
+    def update(self, spisok=[-1, -1], dell=False, clear=False,faza_null=False):
+        if faza_null:
+            self.cur_frame = 0
+            self.image = self.frame[self.cur_frame]
+            self.image = pygame.transform.rotate(self.image, 90 * self.position_in_masiv)
+
+        elif clear:
             self.kill()
-        if self.x == spisok[0] and self.y == spisok[1]:
+        elif self.x == spisok[0] and self.y == spisok[1]:
             if dell:
                 self.kill()
             elif spisok[2] == 'right' and spisok[3] == 'down':
@@ -84,7 +89,6 @@ class Angle(pygame.sprite.Sprite):
                 self.image = pygame.transform.flip(self.image, False, True)
 
             elif spisok[2] == 'down' and spisok[3] == 'right':
-                print(2342)
                 self.cur_frame = (self.cur_frame + 1) % len(self.frame)
                 self.image = self.frame[self.cur_frame]
                 self.image = pygame.transform.flip(self.image, True, True)
@@ -104,7 +108,6 @@ class Angle(pygame.sprite.Sprite):
                 self.image = self.frame[self.cur_frame]
                 self.image = pygame.transform.flip(self.image, True, False)
             else:
-                print(000)
-                print(spisok)
+
                 self.cur_frame = (self.cur_frame + 1) % len(self.frame)
                 self.image = self.frame[self.cur_frame]

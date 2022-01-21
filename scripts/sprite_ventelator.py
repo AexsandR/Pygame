@@ -2,14 +2,13 @@ import pygame
 from Load_image import load_image
 
 
-class Truba(pygame.sprite.Sprite):
+class Ventilator(pygame.sprite.Sprite):
     def __init__(self, sprite, pos_in_mas=False):
         super().__init__(sprite)
-        self.image = load_image('заполнение 0.png')
+        self.image = load_image('вентилятор 0.png')
         self.rect = self.image.get_rect()
         self.angle = -90
         self.sprite = sprite
-        self.image = pygame.transform.rotate(self.image, self.angle)
         self.rect.x = 0
         self.rect.y = 0
         self.position = ['-', '|']
@@ -27,8 +26,8 @@ class Truba(pygame.sprite.Sprite):
                     break
 
     def cut_sheet(self, angle):
-        for i in range(10):
-            self.image = load_image(f'заполнение {i}.png')
+        for i in range(3):
+            self.image = load_image(f'вентилятор {i}.png')
             self.rect = self.image.get_rect()
             self.image = pygame.transform.rotate(self.image, angle)
             self.frame.append(self.image)
@@ -46,12 +45,13 @@ class Truba(pygame.sprite.Sprite):
             self.position_in_masiv = (-1 + self.position_in_masiv) % len(self.position)
 
     def stop(self, x, y):
+        print(self.position[self.position_in_masiv])
         self.status_move = False
         self.x = x
         print(x)
         self.y = y
-        if self.position[self.position_in_masiv] == '-':
-            self.image = load_image('заполнение 0.png')
+        if self.position[self.position_in_masiv] == '|':
+            self.image = load_image('вентилятор 0.png')
             self.image = pygame.transform.rotate(self.image, -90)
             self.cut_sheet(-90)
             self.image = self.frame[self.cur_frame]
@@ -59,7 +59,7 @@ class Truba(pygame.sprite.Sprite):
             self.rect.y = y * 32
             print(self.rect.x)
         else:
-            self.image = load_image('заполнение 0.png')
+            self.image = load_image('вентилятор 0.png')
             self.cut_sheet(0)
             self.image = self.frame[self.cur_frame]
             self.rect.x = x * 32
@@ -79,20 +79,13 @@ class Truba(pygame.sprite.Sprite):
     def get_position(self):
         return self.position[self.position_in_masiv]
 
-
     def update(self, spisok=[-1, -1], dell=False, clear=False, faza_null=False):
 
-        if faza_null:
-            self.cur_frame = 0
-            self.image = self.frame[self.cur_frame]
-        elif clear:
+        if clear:
             self.kill()
         elif spisok[0] == self.x and self.y == spisok[1]:
             if dell:
                 self.kill()
-            elif spisok[2] == 'left' or spisok[2] == 'down':
-                self.cur_frame = (self.cur_frame + 1) % len(self.frame)
-                self.image = pygame.transform.rotate(self.frame[self.cur_frame], 180)
             else:
                 self.cur_frame = (self.cur_frame + 1) % len(self.frame)
                 self.image = self.frame[self.cur_frame]
