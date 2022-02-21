@@ -79,9 +79,9 @@ class Truba(pygame.sprite.Sprite):
     def get_position(self):
         return self.position[self.position_in_masiv]
 
-
     def update(self, spisok=[-1, -1], dell=False, clear=False, faza_null=False):
-
+        print(self.x == spisok[0])
+        print(self.y)
         if faza_null:
             self.cur_frame = 0
             self.image = self.frame[self.cur_frame]

@@ -3,7 +3,7 @@ from Load_image import load_image
 
 
 class Nachalo(pygame.sprite.Sprite):
-    def __init__(self, type):
+    def __init__(self, type, y):
         super().__init__(type)
         self.image = load_image('начало 0.png')
         self.image = pygame.transform.rotate(self.image, 90)
@@ -15,7 +15,7 @@ class Nachalo(pygame.sprite.Sprite):
         self.image = self.frame[self.cur_frame]
         self.rect = self.image.get_rect()
         self.rect.x = 0
-        self.rect.y = 192
+        self.rect.y = y * 32
 
     def rotate(self, q):
         if q == 1:

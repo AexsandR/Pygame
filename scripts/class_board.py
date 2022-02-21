@@ -1,18 +1,21 @@
 import pygame
+import json
 
 
 class Board:
     # создание поля
-    def __init__(self, width, height):
+    def __init__(self, width, height, end, nachalo):
         self.width = width
         self.height = height
-        self.board = [[0] * width for _ in range(height)]
-        self.board[6][0] = '-'
-        self.board[7][0] = 'end'
+        self.board = [["0"] * width for _ in range(height)]
+        self.board[nachalo[0]][nachalo[1]] = '-'
+        self.board[end[0]][end[1]] = 'end'
         # значения по умолчанию
         self.x = 0
         self.y = 0
         self.cell_size = 30
+        self.p_x = nachalo[1]
+        self.p_y = nachalo[0]
 
     def take_a_position(self, pos):
         x = pos[0]
@@ -20,16 +23,33 @@ class Board:
         position = pos[2]
         self.board[y][x] = position
 
-    def to_give_position(self,pos):
+    def to_give_position(self, pos):
         x = pos[0]
         y = pos[1]
         return self.board[y][x]
+    def give_mat(self, sp):
+        self.board = sp
 
-    def save(self, spisok_sprite):
-        ...
+    def save(self, spisok_sprite, spisok_activ_elem, slovar_smesitel):
+        str_spisok = ''
+        for rows in self.board:
+            for i in range(len(rows) - 1):
+                str_spisok += str(rows[i]) + ' '
+            str_spisok += str(rows[-1]) + '\n'
+        with open('save/save_marrix.txt', mode='w') as file:
+            file.write(str_spisok)
+            slovar = {'sprite': spisok_sprite,
+                      "list_action": spisok_activ_elem,
+                      "slovar_smesitel": slovar_smesitel}
+        with open('save/stuff.json', 'w') as file:
+            json.dump(slovar, file)
 
     def load(self):
-        ...
+        with open('save/stuff.json', encoding='utf-8') as file:
+            slovar = json.load(file)
+        with open('save/save_marrix.txt', encoding='utf-8') as file:
+            data = file.readlines()
+        return [slovar, data]
 
     # настройка внешнего вида
     def set_view(self, x, y, cell_size):
@@ -69,12 +89,12 @@ class Board:
 
     def get_click(self, mouse_pos):
         cell = self.get_cell(mouse_pos)
-        for i  in self.board:
+        for i in self.board:
             print(i)
 
     def proverka(self):
-        x = 0
-        y = 6
+        x = self.p_x
+        y = self.p_y
         res = False
         spisok = []
         napr_x = 1
@@ -173,3 +193,6 @@ class Board:
             return spisok
         else:
             return False
+
+
+
