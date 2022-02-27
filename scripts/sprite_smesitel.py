@@ -9,7 +9,7 @@ class Smesitel(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.angle = -90
         self.sprite = sprite
-        self.image = pygame.transform.rotate(self.image, self.angle)
+        self.image = pygame.transform.rotate(self.image, -90)
         self.rect.x = -100
         self.rect.y = -100
         self.position = ['-', '|']
@@ -20,8 +20,6 @@ class Smesitel(pygame.sprite.Sprite):
         self.x = None
         self.y = None
         self.stutus_naprovlenie = False
-        self.cut_sheet()
-        self.image = self.frame[self.cur_frame]
         if pos_in_mas:
             for i in range(len(self.position)):
                 if pos_in_mas == self.position[i]:
@@ -29,22 +27,34 @@ class Smesitel(pygame.sprite.Sprite):
                     self.image = pygame.transform.rotate(self.image, 90 * i)
                     break
 
+    def get_sprite(self, sprite):
+        self.sprite_type = sprite
+
+    def return_sprite(self):
+        return self.sprite_type
+
     def rotate(self, q):
-        if q == 1:
-            self.image = pygame.transform.rotate(self.image, 90)
+        if q != 1:
+            self.image = pygame.transform.rotate(self.image, -90)
+            self.angle -= 90
             self.position_in_masiv = (1 + self.position_in_masiv) % len(self.position)
         else:
-            self.image = pygame.transform.rotate(self.image, -90)
+            self.angle += 90
+            self.image = pygame.transform.rotate(self.image, 90)
             self.position_in_masiv = (-1 + self.position_in_masiv) % len(self.position)
 
     def cut_sheet(self):
         for i in range(5):
             self.image = load_image(f'смеситель {i}.png')
             self.rect = self.image.get_rect()
-            self.image = pygame.transform.rotate(self.image, -90)
+            self.image = pygame.transform.rotate(self.image, self.angle)
             self.frame.append(self.image)
 
     def stop(self, x, y):
+        self.cut_sheet()
+        self.image = self.frame[self.cur_frame]
+        self.rect.x = x * 32
+        self.rect.y = y * 32
         self.status_move = False
         self.x = x
         self.y = y
@@ -68,7 +78,6 @@ class Smesitel(pygame.sprite.Sprite):
         return self.position[self.position_in_masiv]
 
     def update(self, spisok=[-1, -1], dell=False, clear=False):
-        print(spisok)
         if clear:
             self.kill()
         if spisok[0] == self.x and self.y == spisok[1]:

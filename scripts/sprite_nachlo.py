@@ -7,8 +7,6 @@ class Nachalo(pygame.sprite.Sprite):
         super().__init__(type)
         self.image = load_image('начало 0.png')
         self.image = pygame.transform.rotate(self.image, 90)
-
-
         self.frame = []
         self.cut_sheet()
         self.cur_frame = 0
@@ -39,8 +37,3 @@ class Nachalo(pygame.sprite.Sprite):
     def update(self):
         self.cur_frame = (self.cur_frame + 1) % len(self.frame)
         self.image = self.frame[self.cur_frame]
-
-
-
-
-

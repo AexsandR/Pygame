@@ -36,6 +36,12 @@ class Ventilator(pygame.sprite.Sprite):
         self.rect.x = sp[0] * 32
         self.rect.y = sp[1] * 32
 
+    def get_sprite(self, sprite):
+        self.sprite_type = sprite
+
+    def return_sprite(self):
+        return self.sprite_type
+
     def rotate(self, q):
         if q == 1:
             self.image = pygame.transform.rotate(self.image, 90)
@@ -45,10 +51,8 @@ class Ventilator(pygame.sprite.Sprite):
             self.position_in_masiv = (-1 + self.position_in_masiv) % len(self.position)
 
     def stop(self, x, y):
-        print(self.position[self.position_in_masiv])
         self.status_move = False
         self.x = x
-        print(x)
         self.y = y
         if self.position[self.position_in_masiv] == '|':
             self.image = load_image('вентилятор 0.png')
@@ -57,7 +61,6 @@ class Ventilator(pygame.sprite.Sprite):
             self.image = self.frame[self.cur_frame]
             self.rect.x = x * 32
             self.rect.y = y * 32
-            print(self.rect.x)
         else:
             self.image = load_image('вентилятор 0.png')
             self.cut_sheet(0)

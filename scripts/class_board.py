@@ -30,18 +30,25 @@ class Board:
     def give_mat(self, sp):
         self.board = sp
 
-    def save(self, spisok_sprite, spisok_activ_elem, slovar_smesitel):
+    def save(self, spisok_sprite, spisok_activ_elem, slovar_smesitel, list_action):
         str_spisok = ''
         for rows in self.board:
             for i in range(len(rows) - 1):
                 str_spisok += str(rows[i]) + ' '
             str_spisok += str(rows[-1]) + '\n'
+
         with open('save/save_marrix.txt', mode='w') as file:
             file.write(str_spisok)
+            sl = {}
+            for key, value in slovar_smesitel.items():
+                sl[f"{key[0]} {key[1]}"] = value
+            slovar_smesitel = sl
             slovar = {'sprite': spisok_sprite,
-                      "list_action": spisok_activ_elem,
-                      "slovar_smesitel": slovar_smesitel}
+                      "spisok_activ_elem": spisok_activ_elem,
+                      "slovar_smesitel": slovar_smesitel,
+                      "list_action":list_action}
         with open('save/stuff.json', 'w') as file:
+
             json.dump(slovar, file)
 
     def load(self):
@@ -89,8 +96,6 @@ class Board:
 
     def get_click(self, mouse_pos):
         cell = self.get_cell(mouse_pos)
-        for i in self.board:
-            print(i)
 
     def proverka(self):
         x = self.p_x
@@ -101,8 +106,7 @@ class Board:
         napr_y = 0
         napravlenie = 'right'
         position = '-'
-        for i in self.board:
-            print(i)
+
         while True:
             try:
                 if isinstance(self.board[y][x], int):
@@ -185,10 +189,9 @@ class Board:
                     break
 
             except Exception as err:
-                print(err)
+
                 break
-        print()
-        print(spisok)
+
         if res is True:
             return spisok
         else:

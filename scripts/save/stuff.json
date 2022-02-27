@@ -1,3 +1,1 @@
-
-
-{"sprite": {"truba": [], "smesitel": [], "angle": [], "ventilator": [], "troinik": []}, "list_action": {"truba": [[14, 10]], "smesitel": [], "angle": [], "ventilator": [], "troinik": []}, "slovar_smesitel": []}
+{"sprite": {"truba": [], "smesitel": [], "angle": [], "ventilator": [], "troinik": []}, "spisok_activ_elem": [], "slovar_smesitel": {}, "list_action": []}

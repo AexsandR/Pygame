@@ -5,20 +5,16 @@ from sprite_end import End
 from sprite_truba import Truba
 from sprite_nachlo import Nachalo
 from sprite_angle import Angle
-import sys
 
-if __name__ != '__main__':
 
-    pygame.init()
-    pygame.init()
-    sc = pygame.display.set_mode((1280, 720))
+
+def level2(sc):
     fon = load_image('2_1.png')
     sc.blit(fon, (0, 0))
     pygame.display.flip()
     board = Board(20, 14, [8, 0], [6, 0])
     board.set_view(0, 0, 32)
     q = 0
-    truba = pygame.sprite.Group()
     end = pygame.sprite.Group()
     nachalo = pygame.sprite.Group()
     Nachalo(nachalo, 6)
@@ -27,17 +23,16 @@ if __name__ != '__main__':
     angle = pygame.sprite.Group()
     running = True
     status = False
-    cord_button = [[1121, 418, 159, 40], [831, 418, 113, 32],[320, 448, 319, 112],[1, 448, 319, 112]]
-    sp_cord_level = [(1, 6), (1, 7), (1,8)]
+    cord_button = [[1121, 418, 159, 40], [831, 418, 113, 32], [320, 448, 319, 112], [1, 448, 319, 112]]
+    sp_cord_level = [(1, 6), (1, 7), (1, 8)]
     shag = 1
     q = 0
     while running:
         sc.fill((54, 54, 54))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                return False
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1 and status and shag == 5:
-                print(13212341)
                 if cord_button[2][0] <= event.pos[0] <= cord_button[2][0] + cord_button[2][-2] and \
                         cord_button[2][1] <= event.pos[1] <= cord_button[2][1] + cord_button[2][
                     -1]:
@@ -59,8 +54,8 @@ if __name__ != '__main__':
                 elif cord_button[1][0] <= event.pos[0] <= cord_button[1][0] + cord_button[1][-2] and \
                         cord_button[1][1] <= event.pos[1] <= cord_button[1][1] + cord_button[1][-1] and shag == 3:
                     status = True
-                    object = Truba(angle)
-                    shag +=1
+                    object = Truba(truba)
+                    shag += 1
 
             if event.type == pygame.MOUSEMOTION and status:
                 if board.get_cell(event.pos):
@@ -68,17 +63,14 @@ if __name__ != '__main__':
                     object.move(pos)
 
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1 and status and shag != 5:
-                print(shag)
                 if board.get_cell(event.pos):
                     pos = board.get_cell(event.pos)
-                    print(pos)
                     if pos in sp_cord_level and pos == sp_cord_level[0]:
                         if shag == 4:
                             shag += 1
                             fon = load_image('2_3.png')
                             sc.blit(fon, (0, 0))
                         else:
-                            print(12312432354345354645674567)
                             sp_cord_level.remove(pos)
                             status = False
                             object.stop(pos[0], pos[1])
@@ -94,11 +86,12 @@ if __name__ != '__main__':
                             if shag == 11:
                                 shag += 1
                             if shag == 12:
-                                sys.exit()
+                                return True
 
         board.render(sc)
         end.draw(sc)
         nachalo.draw(sc)
         angle.draw(sc)
+        truba.draw(sc)
         sc.blit(fon, (0, 0))
         pygame.display.flip()

@@ -22,8 +22,6 @@ class Angle(pygame.sprite.Sprite):
                 if pos_in_mas == self.position[i]:
                     self.position_in_masiv = i
                     self.image = pygame.transform.rotate(self.image, 90 * i)
-                    print(12312354675467)
-                    print(i)
                     break
 
     def cut_sheet(self):
@@ -62,7 +60,13 @@ class Angle(pygame.sprite.Sprite):
         else:
             return False
 
-    def update(self, spisok=[-1, -1], dell=False, clear=False,faza_null=False):
+    def get_sprite(self, sprite):
+        self.sprite_type = sprite
+
+    def return_sprite(self):
+        return self.sprite_type
+
+    def update(self, spisok=[-1, -1], dell=False, clear=False, faza_null=False):
         if faza_null:
             self.cur_frame = 0
             self.image = self.frame[self.cur_frame]

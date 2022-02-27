@@ -7,14 +7,11 @@ from sprite_nachlo import Nachalo
 import sys
 
 
-
-def zapolnenie(sp):
+def zapolnenie(truba, nachalo, end, clock, sc, board):
     res = board.proverka()
     fon = load_image('фон_с_кнопками.png')
     sc.blit(fon, (0, 0))
     if res:
-        print(
-            '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         for i in range(8):
             board.render(sc)
             nachalo.update()
@@ -26,7 +23,6 @@ def zapolnenie(sp):
             clock.tick(8)
         for cord in res:
             if cord == res[-1]:
-                print(1234132424350000000000000000000000)
                 fon = load_image('1_5.png')
                 sc.blit(fon, (0, 0))
                 pygame.display.flip()
@@ -51,7 +47,7 @@ def zapolnenie(sp):
                                 if q == 1:
                                     q += 1
                                 elif q == 2:
-                                   import level_2
+                                    return True
 
             for i in range(9):
                 for event in pygame.event.get():
@@ -63,10 +59,8 @@ def zapolnenie(sp):
                 pygame.display.flip()
                 clock.tick(30)
 
-if __name__ != '__main__':
 
-    pygame.init()
-    sc = pygame.display.set_mode((1280, 720))
+def level1(sc):
     fon = load_image('1_1.png')
     sc.blit(fon, (0, 0))
     pygame.display.flip()
@@ -91,7 +85,7 @@ if __name__ != '__main__':
         sc.fill((54, 54, 54))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                return False
 
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1 and status is False:
                 if cord_button[0][0] <= event.pos[0] <= cord_button[0][0] + cord_button[0][-2] and \
@@ -104,7 +98,8 @@ if __name__ != '__main__':
                 elif cord_button[1][0] <= event.pos[0] <= cord_button[1][0] + cord_button[1][-2] and \
                         cord_button[1][1] <= event.pos[1] <= cord_button[1][1] + cord_button[1][-1] and shag == 5:
                     shag += 1
-                    zapolnenie(sp)
+                    if zapolnenie(truba, nachalo, end, clock, sc, board):
+                        return True
 
 
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1 and status:

@@ -2,6 +2,10 @@ import pygame
 
 from Start_window import start_screen
 from Load_image import load_image
+from level_1 import level1
+from level_2 import level2
+from level_3 import level3
+from vodoprovod import start
 
 
 def menu():
@@ -22,10 +26,15 @@ def menu():
                     q += 1
                 elif event.type == pygame.MOUSEBUTTONUP and q != 0:
                     if 0 <= event.pos[1] < 301:
-                        import vodoprovod
-                        running = False
+                        start(sc)
+                        return None
                     else:
-                       import level_1
+                        if level1(sc):
+                            if level2(sc):
+                                if level3(sc):
+                                    if start(sc):
+                                        return None
+                        return None
 
 
 if __name__ != '__main__':

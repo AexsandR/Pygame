@@ -19,6 +19,7 @@ class Truba(pygame.sprite.Sprite):
         self.frame = []
         self.x = None
         self.y = None
+        self.sprite_type = None
         self.stutus_naprovlenie = False
         if pos_in_mas:
             for i in range(len(self.position)):
@@ -48,7 +49,6 @@ class Truba(pygame.sprite.Sprite):
     def stop(self, x, y):
         self.status_move = False
         self.x = x
-        print(x)
         self.y = y
         if self.position[self.position_in_masiv] == '-':
             self.image = load_image('заполнение 0.png')
@@ -57,7 +57,6 @@ class Truba(pygame.sprite.Sprite):
             self.image = self.frame[self.cur_frame]
             self.rect.x = x * 32
             self.rect.y = y * 32
-            print(self.rect.x)
         else:
             self.image = load_image('заполнение 0.png')
             self.cut_sheet(0)
@@ -79,9 +78,13 @@ class Truba(pygame.sprite.Sprite):
     def get_position(self):
         return self.position[self.position_in_masiv]
 
+    def get_sprite(self, sprite):
+        self.sprite_type = sprite
+
+    def return_sprite(self):
+        return self.sprite_type
+
     def update(self, spisok=[-1, -1], dell=False, clear=False, faza_null=False):
-        print(self.x == spisok[0])
-        print(self.y)
         if faza_null:
             self.cur_frame = 0
             self.image = self.frame[self.cur_frame]
