@@ -1,1 +1,1 @@
-{"sprite": {"truba": [], "smesitel": [], "angle": [], "ventilator": [], "troinik": []}, "spisok_activ_elem": [], "slovar_smesitel": {}, "list_action": []}
+{"sprite": {"truba": [[14, 6], [13, 6], [12, 6], [11, 6], [10, 6], [9, 6], [8, 6], [7, 6], [6, 6], [5, 6], [4, 6], [3, 6], [2, 6], [1, 6]], "smesitel": [[18, 6]], "angle": [], "ventilator": [], "troinik": []}, "spisok_activ_elem": [], "slovar_smesitel": {"18 6": [0, 1]}, "list_action": [[14, 6], [13, 6], [12, 6], [11, 6], [10, 6], [9, 6], [8, 6], [7, 6], [6, 6], [5, 6], [4, 6], [3, 6], [2, 6], [1, 6], [18, 6]]}

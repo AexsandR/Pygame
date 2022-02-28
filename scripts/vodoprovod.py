@@ -9,7 +9,7 @@ from sprite_smesitel import Smesitel
 from sprite_ventelator import Ventilator
 import threading
 from sprite_three import Three
-from Load_save import load_save
+
 
 object = None
 
@@ -136,7 +136,7 @@ def proverka_sp(pos, sp, all_sprites, type_sprite, setting_shag, list_action, sp
 
             return [False, setting_shag, list_action, spisok_activ_elem, slovar_sprite]
     else:
-        return False
+        return [True, setting_shag, list_action, spisok_activ_elem, slovar_sprite]
 
 
 def proverka_combo(x, y, sp, all_sprites):
@@ -178,8 +178,7 @@ def start(screen):
     all_sprites = pygame.sprite.Group()
     ventilator = pygame.sprite.Group()
     troinik = pygame.sprite.Group()
-    list_action = []
-    s = load_save(board, [truba, angle, ventilator, smesitel])
+    s = board.load_save([truba, angle, ventilator, smesitel])
     slovar_smesitel = {}
     truba = s[0]
     angle = s[1]
@@ -189,7 +188,7 @@ def start(screen):
     spisok_activ_elem = s[5]
     slovar_sprite = s[6]
     list_action = s[7]
-    print(list_action)
+
 
     status_combo = False
 
@@ -214,7 +213,7 @@ def start(screen):
     shag = 1
     running = True
     status = False
-    print(len(truba))
+
     while running:
         screen.fill((54, 54, 54))
         screen.blit(fon, (0, 0))
@@ -256,10 +255,8 @@ def start(screen):
                             ventilator.update(pos, dell=True)
                             angle.update(pos, dell=True)
                             smesitel.update(pos, dell=True)
-                            print(len_truba)
                             res = list_action.index(pos)
                             list_action[res] = None
-                            print(slovar_sprite)
                             if len_truba > len(truba):
                                 pos.append(truba)
                                 pos.append(Truba)
@@ -294,9 +291,7 @@ def start(screen):
                                     truba.update(pos, dell=True)
                                     res = list_action[i].index(pos)
                                     list_action[i][res] = None
-                                    print(slovar_sprite)
                                     slovar_sprite['truba'].remove([pos[0], pos[1]])
-                                    print(slovar_sprite)
                                     pos.append(truba)
                                     pos.append(Truba)
 
@@ -306,7 +301,6 @@ def start(screen):
                                     list_action.append(pos)
                                     board.take_a_position([pos[0], pos[1], 0])
                                     break
-                        print(slovar_sprite)
 
                 if status_combo:
                     status_dell = False
@@ -390,13 +384,11 @@ def start(screen):
                                     if len(list_action) != 0:
                                         elem = list_action.pop()
                                         if elem:
-                                            print(elem)
                                             if len(elem) > 2 and isinstance(elem[0],list):
                                                     for j in elem:
                                                         truba.update(j, dell=True)
                                             elif len(elem) > 2:
                                                 if elem[2] == truba:
-                                                    print(slovar_sprite)
                                                     slovar_sprite['truba'].append([elem[0], elem[1]])
                                                     if len(elem) == 6:
                                                         object = elem[3](all_sprites, elem[-2])
